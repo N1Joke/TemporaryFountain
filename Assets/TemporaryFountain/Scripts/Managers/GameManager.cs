@@ -27,7 +27,6 @@ public class GameManager : MonoBehaviour
         if (!Instance)
             Instance = this;
 
-        _timeSinceLastSpawnClock = _clockSpawnDelay;
         _timeSinceLastSpawnCoin = _coinSpawnDelay;
     }
 
