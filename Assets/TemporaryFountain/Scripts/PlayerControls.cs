@@ -7,10 +7,13 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private TypeMovement _typeMovement;
     [SerializeField] private float _speed;
     [SerializeField] private float _speedRotation;
-    
+    [SerializeField] private float _startAnimationTime = 1f;
+
     //private float _borderRadius = 6.06f;
     private Rigidbody2D _rigidbody2d;
+    private BoxCollider2D _collider2D;
     private float _lastAngle;
+    private bool _freezMovements = false;
 
     public enum TypeMovement
     {
@@ -20,17 +23,34 @@ public class PlayerControls : MonoBehaviour
 
     private void Awake()
     {
+        _collider2D = GetComponent<BoxCollider2D>();
         _rigidbody2d = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
     {
+        _freezMovements = true;
+        _collider2D.enabled = false;
+        LeanTween.move(gameObject, Vector2.zero, _startAnimationTime).setEaseOutSine().setOnComplete(() =>
+         {
+             _freezMovements = false;
+             _collider2D.enabled = true;
+         });
+
         //_borderRadius = GameManager.Instance.BorderRadius;
         _lastAngle = transform.rotation.eulerAngles.z;
     }
 
     private void FixedUpdate()
     {
+        UpdateMovement();
+    }
+
+    private void UpdateMovement()
+    {
+        if (_freezMovements)
+            return;
+
         float horisontalAxis = Input.GetAxis("Horizontal") * Time.deltaTime;
         float verticalAxis = Input.GetAxis("Vertical") * Time.deltaTime;
         switch (_typeMovement)
@@ -54,7 +74,7 @@ public class PlayerControls : MonoBehaviour
                 _rigidbody2d.MovePosition(pos);
                 break;
         }
-    }        
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

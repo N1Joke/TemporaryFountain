@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private PlayerControls _player;
     [SerializeField] private Coin _coinPrefab;
     [SerializeField] private Clock _clockPrefab;
     [SerializeField] private float _coinSpawnDelay;
@@ -16,25 +17,47 @@ public class GameManager : MonoBehaviour
     private float _timeSinceLastSpawnCoin;
     private float _timeSinceLastSpawnClock;
     private float _currentGameTime;
+    private bool _gameInAction = false;
 
     public float BorderRadius => _borderRadius;
     public static GameManager Instance;
 
     private void Start()
     {
+        _gameInAction = false;
+        UIManager.Instance.intro.ShowStartIntro();
+        UIManager.Instance.OnStartLevel += StartGame;
+    }
+
+    private void StartGame()
+    {
+        UIManager.Instance.OnStartLevel -= StartGame;
+
+        UIManager.Instance.intro.HideStartIntro();
+
+        _player.gameObject.SetActive(true);
+
         _currentGameTime = _gameTime;
 
         if (!Instance)
             Instance = this;
 
         _timeSinceLastSpawnCoin = _coinSpawnDelay;
+
+        _gameInAction = true;
     }
 
     private void Update()
     {
+        if (_gameInAction)
+            UpdateTimers();
+    }
+
+    private void UpdateTimers()
+    {
         _currentGameTime -= Time.deltaTime;
 
-        UIManager.Instance.UpdateTimeValue(_currentGameTime,_gameTime);
+        UIManager.Instance.UpdateTimeValue(_currentGameTime, _gameTime);
 
         if (_currentGameTime <= 0)
         {

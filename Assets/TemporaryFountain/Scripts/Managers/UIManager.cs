@@ -3,22 +3,34 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _textMeshCoin;
     [SerializeField] private TextMeshProUGUI _textMeshTimeLeft;
-    [SerializeField] private Slider _slider;
+    [SerializeField] private Slider _slider;    
+    [SerializeField] private Button _startButton;
 
     private int _coinCount;
 
     public static UIManager Instance;
+    public Intro intro;
+    public UnityAction OnStartLevel;
 
-    private void Start()
+    private void Awake()
     {
         if (!Instance)
             Instance = this;
+
+        intro.gameObject.SetActive(true);
     }
+
+    private void Start()
+    {
+        
+        _startButton.onClick.AddListener(()=> { OnStartLevel?.Invoke(); });    
+    }    
 
     public void AddCoin(int value = 1)
     {
