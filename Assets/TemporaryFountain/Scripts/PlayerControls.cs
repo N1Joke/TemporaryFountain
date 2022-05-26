@@ -31,10 +31,12 @@ public class PlayerControls : MonoBehaviour
     {
         _freezMovements = true;
         _collider2D.enabled = false;
+        SoundManager.Instance.SwimSound(true);
         LeanTween.move(gameObject, Vector2.zero, _startAnimationTime).setEaseOutSine().setOnComplete(() =>
          {
              _freezMovements = false;
              _collider2D.enabled = true;
+             SoundManager.Instance.SwimSound(false);
          });
 
         //_borderRadius = GameManager.Instance.BorderRadius;
@@ -53,6 +55,12 @@ public class PlayerControls : MonoBehaviour
 
         float horisontalAxis = Input.GetAxis("Horizontal") * Time.deltaTime;
         float verticalAxis = Input.GetAxis("Vertical") * Time.deltaTime;
+
+        if (horisontalAxis != 0 || verticalAxis != 0)
+            SoundManager.Instance.SwimSound(true);
+        else
+            SoundManager.Instance.SwimSound(false);
+
         switch (_typeMovement)
         {
             case TypeMovement.Simple:
