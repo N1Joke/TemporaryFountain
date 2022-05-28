@@ -11,25 +11,28 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textMeshTimeLeft;
     [SerializeField] private Slider _slider;    
     [SerializeField] private Button _startButton;
+    [SerializeField] private Button _restartButton;
 
     private int _coinCount;
 
     public static UIManager Instance;
-    public Intro intro;
+    public Intro startIntro;
+    public Intro endClip;
     public UnityAction OnStartLevel;
+    public UnityAction OnGameOver;
 
     private void Awake()
     {
         if (!Instance)
             Instance = this;
 
-        intro.gameObject.SetActive(true);
+        startIntro.gameObject.SetActive(true);
     }
 
     private void Start()
-    {
-        
-        _startButton.onClick.AddListener(()=> { OnStartLevel?.Invoke(); });    
+    {        
+        _startButton.onClick.AddListener(()=> { OnStartLevel?.Invoke(); });
+        _restartButton.onClick.AddListener(() => { OnGameOver?.Invoke(); });
     }    
 
     public void AddCoin(int value = 1)

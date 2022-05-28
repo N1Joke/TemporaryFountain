@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource _coin;
     [SerializeField] private AudioSource _clock;
     [SerializeField] private AudioSource _swim;
+    [SerializeField] private AudioSource _swing;
 
     public static SoundManager Instance;
 
@@ -30,6 +31,11 @@ public class SoundManager : MonoBehaviour
         _clock.Play();
     }
 
+    public void PlaySwingSound()
+    {
+        _swing.pitch = Random.Range(0.75f, 1.25f);
+        _swing.Play();
+    }
     public void SwimSound(bool enable)
     {
         if (_swimSoundEnabled == enable)

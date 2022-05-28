@@ -9,9 +9,9 @@ public class Intro : MonoBehaviour
     [SerializeField] private RectTransform _buttonStart;
     [SerializeField] private float _delayBetweenAnimations;
 
-    public void ShowStartIntro()
+    public void ShowIntro()
     {
-        StartCoroutine(StartIntro());
+        StartCoroutine(CourutineIntro());
     }
 
     public void HideStartIntro()
@@ -19,7 +19,7 @@ public class Intro : MonoBehaviour
         StartCoroutine(HideIntro());
     }
 
-    private IEnumerator StartIntro()
+    private IEnumerator CourutineIntro()
     {
         Vector3 startPosBoy = _boy.anchoredPosition;
         Vector3 startPosInfoTab = _infoTab.anchoredPosition;
@@ -31,12 +31,15 @@ public class Intro : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
+        SoundManager.Instance.PlaySwingSound();
         LeanTween.move(_boy, startPosBoy, _delayBetweenAnimations).setEaseInOutSine();
         yield return new WaitForSeconds(_delayBetweenAnimations);
 
+        SoundManager.Instance.PlaySwingSound();
         LeanTween.move(_infoTab, startPosInfoTab, _delayBetweenAnimations).setEaseInOutSine();
         yield return new WaitForSeconds(_delayBetweenAnimations);
 
+        SoundManager.Instance.PlaySwingSound();
         LeanTween.move(_buttonStart, startPosButtonStart, _delayBetweenAnimations).setEaseInOutSine();
         yield return new WaitForSeconds(_delayBetweenAnimations);
     }
@@ -45,12 +48,15 @@ public class Intro : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
+        SoundManager.Instance.PlaySwingSound();
         LeanTween.move(_boy, Vector3.left * 2000f, _delayBetweenAnimations).setEaseInOutSine();
         yield return new WaitForSeconds(_delayBetweenAnimations);
 
+        SoundManager.Instance.PlaySwingSound();
         LeanTween.move(_infoTab, Vector3.right * 2000f, _delayBetweenAnimations).setEaseInOutSine();
         yield return new WaitForSeconds(_delayBetweenAnimations);
 
+        SoundManager.Instance.PlaySwingSound();
         LeanTween.move(_buttonStart, Vector3.down * 1000f, _delayBetweenAnimations).setEaseInOutSine();
         yield return new WaitForSeconds(_delayBetweenAnimations);
 

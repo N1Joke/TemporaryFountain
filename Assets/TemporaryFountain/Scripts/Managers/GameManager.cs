@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _gameInAction = false;
-        UIManager.Instance.intro.ShowStartIntro();
+        UIManager.Instance.startIntro.ShowIntro();
         UIManager.Instance.OnStartLevel += StartGame;
     }
 
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.Instance.OnStartLevel -= StartGame;
 
-        UIManager.Instance.intro.HideStartIntro();
+        UIManager.Instance.startIntro.HideStartIntro();
 
         _player.gameObject.SetActive(true);
 
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
         if (_currentGameTime <= 0)
         {
-            LoadScene();
+            GameOver();
         }
 
         if (_timeSinceLastSpawnCoin >= _coinSpawnDelay)
@@ -99,8 +99,18 @@ public class GameManager : MonoBehaviour
         collectableObject.GetComponent<Collectable>().PopUpCollectable();        
     }
 
+    private void GameOver()
+    {
+        UIManager.Instance.endClip.gameObject.SetActive(true);
+        _gameInAction = false;
+        _player.gameObject.SetActive(false);
+        UIManager.Instance.endClip.ShowIntro();
+        UIManager.Instance.OnGameOver += LoadScene;
+    }
+
     private void LoadScene()
     {
+        UIManager.Instance.OnGameOver -= LoadScene;
         SceneManager.LoadScene(0);
     }
 }

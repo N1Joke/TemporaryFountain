@@ -10,10 +10,12 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float _startAnimationTime = 1f;
 
     //private float _borderRadius = 6.06f;
+    private bool _swimming = false;
     private Rigidbody2D _rigidbody2d;
     private BoxCollider2D _collider2D;
     private float _lastAngle;
     private bool _freezMovements = false;
+    private Animator _animator;
 
     public enum TypeMovement
     {
@@ -25,6 +27,7 @@ public class PlayerControls : MonoBehaviour
     {
         _collider2D = GetComponent<BoxCollider2D>();
         _rigidbody2d = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -32,11 +35,13 @@ public class PlayerControls : MonoBehaviour
         _freezMovements = true;
         _collider2D.enabled = false;
         SoundManager.Instance.SwimSound(true);
+        UpdateAnimation(true);
         LeanTween.move(gameObject, Vector2.zero, _startAnimationTime).setEaseOutSine().setOnComplete(() =>
          {
              _freezMovements = false;
              _collider2D.enabled = true;
              SoundManager.Instance.SwimSound(false);
+             UpdateAnimation(false);
          });
 
         //_borderRadius = GameManager.Instance.BorderRadius;
@@ -48,6 +53,16 @@ public class PlayerControls : MonoBehaviour
         UpdateMovement();
     }
 
+    private void UpdateAnimation(bool animate)
+    {
+        if (_swimming == animate)
+            return;
+
+        _swimming = animate;
+
+        _animator.SetBool("Swim", _swimming);
+    }
+
     private void UpdateMovement()
     {
         if (_freezMovements)
@@ -57,9 +72,15 @@ public class PlayerControls : MonoBehaviour
         float verticalAxis = Input.GetAxis("Vertical") * Time.deltaTime;
 
         if (horisontalAxis != 0 || verticalAxis != 0)
+        {
             SoundManager.Instance.SwimSound(true);
+            UpdateAnimation(true);
+        }
         else
+        {
             SoundManager.Instance.SwimSound(false);
+            UpdateAnimation(false);
+        }
 
         switch (_typeMovement)
         {
